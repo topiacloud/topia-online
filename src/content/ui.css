@@ -1,0 +1,50 @@
+﻿#topia-ui-container {
+    position: absolute;
+    z-index: 996;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.topia-ui {
+    position: absolute;
+    z-index: 997;
+}
+
+.background-gray {
+    background: rgb(25, 25, 25);
+}
+
+.all-rounded {
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    border-radius: 7px;
+}
+
+.flip-horizontal {
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    transform: scaleX(-1);
+    -ms-filter: fliph; /*IE*/
+    filter: fliph; /*IE*/
+    -ms-transform:rotate(180deg);
+}
+.flip-vertical {
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    -ms-filter: flipv; /*IE*/
+    filter: flipv; /*IE*/
+    
+    -ms-transform:rotate(360deg);
+}
+.flip-both {
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    
+    -ms-transform:rotate(180deg);
+}

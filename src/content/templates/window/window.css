@@ -1,0 +1,105 @@
+.topia.window {
+    z-index: 999;
+    position: absolute;
+    margin: -20px;
+}
+
+.topia.window.alwaysOnTop {
+    z-index: 2000 !important;
+    pointer-events: none;
+}
+
+.topia.window.frame {
+    border: solid 1px black;
+}
+
+.topia.window .content {
+	position: relative;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
+.topia.window .window-header {
+    border-bottom: solid 1px black;
+    position: relative;
+    top: 0;
+    padding-top: 1px;
+    height: 24px;
+    background: rgba(0, 0, 0, 0.8);
+    text-align: center;
+
+    cursor: default;
+    color: rgb(225, 225, 0);
+    text-shadow: -1px -1px black;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+.topia.window .window-header .close {
+    background: url("images/close.png");
+    z-index: 1001;
+    width: 21px;
+    height: 20px;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    opacity: 0.85;
+}
+
+.topia.window .edge {
+	z-index: 10;
+}
+
+.topia.window .corner {
+	position: absolute;
+	background-image: url('images/corner.png');
+	width: 18px;
+	height: 22px;
+    z-index: 100;
+}
+
+.topia.window .topCorner {
+	top: -8px;
+}
+.topia.window .bottomCorner {
+	bottom: -8px;
+}
+
+.topia.window .leftCorner {
+	left: -8px;
+}
+.topia.window .rightCorner {
+	right: -8px;
+}
+
+.topia.window .verticalEdge {
+	background-image: url('images/vertical.png');
+	z-index: 10;
+	position: absolute;
+	width: 19px;
+    height: 100%;
+}
+
+.topia.window .verticalEdge.rightSide {
+	right: -8px;
+}
+
+.topia.window .verticalEdge.leftSide {
+	left: -8px;
+}
+
+.topia.window .horizontalEdge {
+	background-image: url('images/horizontal.png');
+	z-index: 10;
+	position: absolute;
+	width: 100%;
+	height: 19px;
+}
+
+.topia.window .horizontalEdge.topEdge {
+	top: -8px;
+}
+
+.topia.window .horizontalEdge.bottomEdge {
+	bottom: -8px;
+}

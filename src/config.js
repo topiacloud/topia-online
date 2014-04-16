@@ -1,0 +1,55 @@
+﻿// A list of all the default systems/data to load
+define({
+
+    data: [
+        "core/data/camera",
+        "core/data/canvas",
+        "core/data/cursor",
+        "core/data/drop",
+        "core/data/element",
+        "core/data/entity",
+        "core/data/frame",
+        "core/data/group",
+        "core/data/image",
+        "core/data/keypress",
+        "core/data/operation",
+        "core/data/rectangle",
+        "core/data/region",
+        "core/data/render",
+        "core/data/sprite",
+        "core/data/text",
+        "core/data/texture",
+        "core/data/tint",
+        "core/data/touch",
+        "core/data/ui",
+        "core/data/window",
+        "core/data/world"
+    ],
+
+    systems: [
+        "core/systems/update/frames",
+        "core/systems/graphics/canvas",
+        "core/systems/graphics/draw",
+        "core/systems/graphics/culling",
+        "core/systems/graphics/canvas-resizer",
+        "core/systems/effects/tinting",
+        "core/systems/input/mouse",
+        "core/systems/input/keyboard",
+        "core/systems/input/drop",
+        "core/systems/input/file-drop-handler",
+        "core/systems/input/camera-keyboard-movement",
+        "core/systems/touch/touch-camera",
+        "core/systems/touch/touch-canvas",
+        "core/systems/touch/touch-region",
+        "core/systems/touch/touch-sprite",
+        "core/systems/knockout/knockout-controller",
+        "core/systems/ui/windows",
+        "core/systems/renderers/rectangle-renderer",
+        "core/systems/renderers/text-renderer",
+        "core/systems/renderers/sprite-renderer",
+        "core/systems/debug/fps",
+        "core/systems/debug/region-highlighter",
+        "core/systems/operational/json-exporter",
+        "core/systems/operational/json-importer"
+    ]
+});
