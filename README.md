@@ -1,4 +1,4 @@
-topia-online
+Topia Online
 ============
 
 Topia Online game engine source code for www.topiaonline.com, powered by the Topia Engine.
