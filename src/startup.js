@@ -1,40 +1,42 @@
-﻿// Initial startup settings
-define(["config"], function (config) {
+﻿var sandbox = window.location.href.indexOf("sandbox.html") >= 0;
 
-    // Add/remove data from the default
-    config.data.push("game/data/monument");
-    config.data.push("game/data/terrain");
-    config.data.push("game/data/actor");
+if (sandbox) {
 
-    // Add/remove systems from the default
-    config.systems.push("game/systems/terrain");
-    config.systems.push("game/systems/world");
-    config.systems.push("game/systems/death");
+    define(["data", "plugins/core/plugin", "plugins/debug/plugin", "plugins/topia/plugin"], function (data) {
 
-    // This is the function that gets run when the app starts
-    config.startup = function(data) {
+        // Fast:
+        // - Accessing object field like array
+        // - Iterating linked list
+        // - Iterating array
+        //
+        // Slow:
+        // - Iterating object fields (for in)
 
-        // Create the main canvas
-        var canvas = data("canvas").save({ maximized: true });
+        data("world").on("save", function() {
 
-        // Create a camera
-        data("camera").save({ canvas: canvas.id, x: 0, y: 0  });
+            var tree = data("sprite").save({ x: -300, y: 200, image: "content/assets/game/environment/tree/idle.png" });
+            data("topia", "actor").save({ name: "Tree", sprite: tree.id });
 
-        // Create the main game world
-        data("world").save({});
+            /*data("touch").on("save", function(touch) {
+                if (touch.type == "sprite" && touch.state == "click" && touch.target == tree.id) {
+                    data("animation").save({ path: "content/assets/game/environment/tree/hit.json", sprite: touch.target, duration: 1200, repeat: false });
+                }
+            });*/
 
-        // Create a test window
-        data("window").save({
-            title: "World Editor",
-            template: "content/templates/documentation/documentation.html",
-            position: {
-                my: "right-25 top+25",
-                at: "right top",
-                of: "#canvas1",
-                collision: "fit"
-            }
+            data("window").save({
+                title: "World Editor",
+                template: "content/templates/documentation/documentation.html",
+                position: {
+                    my: "right-25 top+25",
+                    at: "right top",
+                    of: "#canvas1",
+                    collision: "fit"
+                }
+            });
         });
-    };
+    });
 
-    return config;
-});
+} else {
+    define(["data", "plugins/core/plugin", "plugins/login/plugin"], function (data) {
+    });
+}

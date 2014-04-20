@@ -31,6 +31,7 @@
     filter: fliph; /*IE*/
     -ms-transform:rotate(180deg);
 }
+
 .flip-vertical {
     -moz-transform: scaleY(-1);
     -webkit-transform: scaleY(-1);
@@ -41,10 +42,19 @@
     
     -ms-transform:rotate(360deg);
 }
+
 .flip-both {
     -webkit-transform:rotate(180deg);
     -moz-transform:rotate(180deg);
     -o-transform:rotate(180deg);
     
     -ms-transform:rotate(180deg);
+}
+
+.hover {
+    opacity: 1 !important;
+}
+
+.hoverable {
+    opacity: 0.9;
 }
