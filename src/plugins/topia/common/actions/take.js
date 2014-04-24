@@ -3,11 +3,11 @@ define(["data"], function () {
 
     var actors = data("topia", "actor");
     var items = data("topia", "item");
-    var actions = data("topia", "action");
     
     return {
         run: function (action) {
-            if (action.name == "take" && action.owner && action.target) {
+            if (action.owner && action.target) {
+
             var actor = actors.get(action.owner);
             var item = items.get(action.target);
             console.log("Actor" + " " + actor.id + " " + "picked up" + " " + item.name);

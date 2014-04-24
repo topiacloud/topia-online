@@ -1,24 +1,27 @@
 ﻿// Captures mouse/touch events from the document and dispatches them as 'touch' data
 define(["data"], function (data) {
 
-    var touches = data("touch");
     var touch = null;
 
+    // Temporarily disabled due to performance reasons
+    return;
+
     $(document).mousemove(function (e) {
+
         if (touch == null) {
-            touch = touches.create();
+            touch = data.touch.create();
             touch.type = "document";
         }
 
         touch.x = e.pageX;
         touch.y = e.pageY;
 
-        touches.save(touch);
+        data.touch.add(touch);
     });
 
     $(document).mouseleave(function(e) {
         if (touch) {
-            touches.remove(touch);
+            data.touch.remove(touch);
             touch = null;
         }
     });

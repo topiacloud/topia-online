@@ -14,8 +14,6 @@ define([
 
 ], function (data, cache, string, ko) {
 
-    var uis = data("ui");
-
     var save = function(key, value) {
         return function () {
             data(key).save(value);
@@ -32,7 +30,7 @@ define([
         ko.applyBindings(ui, instance[0]);
     };
 
-    uis.on("save", function (ui) {
+    data.ui.on("add", function (ui) {
         var key = string.replace(ui.template, "/", "_").replace(ui.template).split(".")[0];
         var exists = $("#" + key).length > 0;
 

@@ -5,7 +5,7 @@ define(["data"], function (data) {
     var hitboxes = data("hitbox");
 
     // for now, let's check for collisions everytime a hitbox changes position
-    hitboxes.on("save", function (hitboxA) {
+    data.hitboxes.on(["add", "x", "y"], function (hitboxA) {
 
         // check for any collisions
         hitboxes.each(function (hitboxB) {
@@ -13,20 +13,20 @@ define(["data"], function (data) {
             // make sure we are not comparing the same hitbox with itself!
             if (hitboxA.id != hitboxB.id) {
 
-                var x0A = hitboxA.x;                    // left edge of A
-                var x1A = hitboxA.x + hitboxA.width;    // right edge of A
-                var y0A = hitboxA.y;                    // top edge of A
-                var y1A = hitboxA.y + hitboxA.height;   // bottom edge of A
+                var x0A = hitboxA.x;                            // left edge of A
+                var x1A = hitboxA.x + hitboxA.width;            // right edge of A
+                var y0A = hitboxA.y;                            // top edge of A
+                var y1A = hitboxA.y + hitboxA.height;           // bottom edge of A
 
-                var x0B = hitboxB.x;                    // left edge of B
-                var x1B = hitboxB.x + hitboxB.width;    // right edge of B
-                var y0B = hitboxB.y;                    // top edge of B
-                var y1B = hitboxB.y + hitboxB.height;   // bottom edge of B
+                var x0B = hitboxB.x;                            // left edge of B
+                var x1B = hitboxB.x + hitboxB.width;            // right edge of B
+                var y0B = hitboxB.y;                            // top edge of B
+                var y1B = hitboxB.y + hitboxB.height;           // bottom edge of B
                 
-                var xCA = hitboxA.x + (hitboxA.width  * 0.5); // calculate the center X position of A
-                var yCA = hitboxA.y + (hitboxA.height * 0.5); // calculate the center Y position of A
-                var xCB = hitboxB.x + (hitboxB.width  * 0.5); // calculate the center X position of B
-                var yCB = hitboxB.y + (hitboxB.height * 0.5); // calculate the center Y position of B
+                var xCA = hitboxA.x + (hitboxA.width  * 0.5);   // calculate the center X position of A
+                var yCA = hitboxA.y + (hitboxA.height * 0.5);   // calculate the center Y position of A
+                var xCB = hitboxB.x + (hitboxB.width  * 0.5);   // calculate the center X position of B
+                var yCB = hitboxB.y + (hitboxB.height * 0.5);   // calculate the center Y position of B
 
                 var BleftAright = x0B > x1A;
                 var BrightAleft = x1B < x0A;

@@ -1,17 +1,14 @@
 ﻿// Enables moving the camera using WASD key presses.
 define(["data", "../common/keyboard"], function (data, keyboard) {
 
-    var keypresses = data("keypress");
-    var cameras = data("camera");
-    var frames = data("frame");
-
     var speed = 0.5;
     var xVelocity = 0;
     var yVelocity = 0;
 
-    var option = data("option").save({ name: "wasd_camera", value: true });
+    var option = data("option").add({ name: "wasd_camera", value: true });
 
-    keypresses.on("save", function (key) {
+    data.keypress.on(["state", "add", "button"], function (key) {
+
         switch (key.state) {
 
             case "down":
@@ -51,13 +48,13 @@ define(["data", "../common/keyboard"], function (data, keyboard) {
     });
 
     // Todo:  Use motion instead
-    frames.on("save", function(frame) {
+    data.frame.on("time", function(frame) {
         if (!option.value) {
             return;
         }
 
         if (xVelocity != 0 || yVelocity != 0) {
-            var camera = cameras.first();
+            var camera = data.camera.first();
 
             if (camera) {
                 camera.x += parseInt(xVelocity * frame.delta);

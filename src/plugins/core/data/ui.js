@@ -5,6 +5,9 @@ define(["data"], function (data) {
 
         // Todo:  Rename this to 'url'.  URL of the .html template for this component.
         this.template = "";
+
+        // The id of the 'source' of data that this ui represents
+        this.source = 0;
     };
 
     return data.define("ui", UI);

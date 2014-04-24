@@ -23,17 +23,67 @@
 
     // Initialize the app
     callback: function () {
-        require(["data", "plugins/core/common/cache", "startup"], function(data, cache) {
 
-            // Create the main game world
-            data("world").save({});
-
+        require(["data", "startup"], function(data, startup) {
             window.data = data;
+            window.app = { data: data };
 
-            window.app = {
-                data: data,
-                cache: cache
+            var plugins = [];
+
+            _.each(startup.plugins, function(plugin) {
+                plugins.push("plugins/" + plugin + "/plugin");
+            });
+
+            var loaded = 0;
+            var systemStartups = [];
+            var dataTypes = [];
+            var systems = [];
+
+            var finishedLoadingPlugin = function() {
+                loaded += 1;
+
+                if (loaded == plugins.length) {
+                    require(dataTypes, function() {
+                        require(systems, function() {
+
+                            _.each(systemStartups, function(start) {
+                                start(data);
+                            });
+
+                            if (startup.start) {
+                                startup.start(data);
+                            }
+
+                            data("world").add({ startTime: new Date().getTime() });
+                        });
+                    });
+                }
             };
+
+            _.each(plugins, function(plugin) {
+                var pluginName = plugin.split("/")[1];
+
+                require([plugin], function(definition) {
+
+                    if (definition.start) {
+                        systemStartups.push(definition.start);
+                    }
+
+                    if (definition.data) {
+                        _.each(definition.data, function(item) {
+                            dataTypes.push("plugins/" + pluginName + "/data/" + item);
+                        });
+                    }
+
+                    if (definition.systems) {
+                        _.each(definition.systems, function(system) {
+                            systems.push("plugins/" + pluginName + "/systems/" + system);
+                        });
+                    }
+
+                    finishedLoadingPlugin();
+                });
+            });
         });
     }
 });

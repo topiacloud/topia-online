@@ -1,18 +1,16 @@
 ﻿define(["data", "../common/ajax"], function(data, ajax) {
 
-    var images = data("image");
-    var animations = data("animation");
     var animationFrames = data("animation-frame");
 
-    animations.on("save", function(animation) {
+    data.animation.on("add", function(animation) {
 
         // Cancel existing animations
-        var existingAnimations = animations.get({ sprite: animation.sprite });
+        var existingAnimations = data.animation.get({ sprite: animation.sprite });
 
         if (existingAnimations.length > 1) {
             var existing = _.filter(existingAnimations, function(each) { return each.id != animation.id; });
 
-            animations.remove(existing);
+            data.animation.remove(existing);
         }
 
         if (animation.frames) {
@@ -28,7 +26,6 @@
             if (existingFrames.length) {
                 animation.frames = existingFrames.length;
                 animation.path = path;
-                animation.save();
                 return;
             }
 
@@ -54,11 +51,11 @@
                         sourceSizeHeight: each.sourceSize.h
                     };
 
-                    animationFrames.save(newFrame);
+                    animationFrames.add(newFrame);
                 });
 
                 animation.path = path;
-                animation.save();
+                data.animation.commit();
             });
 
             return;
@@ -77,31 +74,20 @@
         animation.frames = frames.length;
     });
 
-    // Todo:  Use frame handler
-    /*animations.on("frame", function(animation) {
-        
-        console.log(animation.frame);
-
-        if (animation.sprite) {
-            
-        }
-    });*/
-
-
     // Preload images associated with animation frames
-    animationFrames.on("save", function(animationFrame) {
+    animationFrames.on("add", function(animationFrame) {
 
         var imageUrl = animationFrame.path + animationFrame.name;
 
         // Preload each animation frame
-        var image = data("image").first({ url: imageUrl }) || data("image").save({ url: imageUrl, isAtlas: animationFrame.isAtlas || false });
+        var image = data.image.first({ url: imageUrl }) || data.image.add({ url: imageUrl, isAtlas: animationFrame.isAtlas || false });
 
         animationFrame.image = image.id;
         animationFrame.isLoaded = image.isLoaded;
     });
 
     // Associate loaded images with animation frames
-    images.on("save", function(image) {
+    data.image.on(["add", "isLoaded"], function(image) {
         if (image.isLoaded) {
             animationFrames.each({ image: image.id }, function(each) {
                 each.isLoaded = image.isLoaded;
@@ -110,13 +96,13 @@
     });
 
     // Todo:  Animation could use a generic 'motion' against its properties
-    data("frame").on("save", function(frame) {
-        animations.each(function(animation) {
+    data.tick.on("time", function(frame) {
+        data.animation.each(function(animation) {
 
             animation.time += frame.delta;
 
             if (!animation.repeat && animation.time >= animation.duration) {
-                animations.remove(animation);
+                data.animation.remove(animation);
                 return;
             }
 
@@ -134,7 +120,7 @@
                         return;
                     }
 
-                    var sprite = data("sprite").get(animation.sprite);
+                    var sprite = data.sprite.get(animation.sprite);
                     sprite.image = animationFrame.path + animationFrame.name;
 
                     if (animationFrame.isAtlas) {
@@ -150,12 +136,8 @@
                         sprite.sourceX = animationFrame.sourceX;
                         sprite.sourceY = animationFrame.sourceY;
                     }
-
-                    sprite.save();
                 }
             }
-
-            //animation.save();
         });
     });
 });

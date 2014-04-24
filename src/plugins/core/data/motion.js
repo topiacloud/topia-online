@@ -1,10 +1,32 @@
 ﻿/*  A motion is an tween/interpolation controller that will move depending on input parameters
- *  if you assign an endX and endY (in world coordinates) then you must assign either time or speed (time has priority).
- *  if instead you assign an angle (in radians), then you must assign a speed, and time is optional (if no time is set, it moves forever)
- *  if instead you assign an angleX and angleY (in range -1 to +1), then you must assign a speed, and time is optional (if no time is set, it moves forever)
- *  if instead you assign a velocityX and velocityY (in world coordinates per milliseconds), then you can also assign a time (if no time is set, it moves forever)
- *  otherwise it will throw an error
- */
+  TEST CASES:
+    var rect = data("rectangle").save({x: 10, y: 10, width: 10, height: 10, color: "red"});
+
+    TEST CASE 1: endX, endY, speed
+    data("motion").save({ type: "rectangle", target: rect.id, endX: 100, endY: 100, speed: 0.1 });
+
+    TEST CASE 2: endX, endY, time
+    data("motion").save({ type: "rectangle", target: rect.id, endX: 100, endY: 100, time: 2000 });
+
+    TEST CASE 3: angle, speed, time
+    data("motion").save({ type: "rectangle", target: rect.id, angle: Math.atan2(-1, 0), speed: 0.1, time: 1000 });
+
+    TEST CASE 4: angle, speed (no time, will go on forever)
+    data("motion").save({ type: "rectangle", target: rect.id, angle: Math.atan2(-1, 0), speed: 0.1 });
+
+    TEST CASE 5: angleX, angleY, speed (no time, will go on forever)
+    data("motion").save({ type: "rectangle", target: rect.id, angleX: -1, angleY: 0, speed: 0.1 });
+
+    TEST CASE 6: angleX, angleY, speed, time
+    data("motion").save({ type: "rectangle", target: rect.id, angleX: -1, angleY: 0, speed: 0.1, time: 1000 });
+
+    TEST CASE 7: velocityX, velocityY (no time, will go on forever)
+    data("motion").save({ type: "rectangle", target: rect.id, velocityX: -0.1, velocityY: 0 });
+
+    TEST CASE 8: velocityX, velocityY, time
+    data("motion").save({ type: "rectangle", target: rect.id, velocityX: -0.1, velocityY: 0, time: 1000 });
+*/
+
 define(["data"], function (data) {
     
     var Motion = function () {
@@ -53,6 +75,15 @@ define(["data"], function (data) {
 
         // The angle Y component of the motion (in 1/radians)
         this.angleY = null;
+
+        // Easing functionality for motion
+        this.ease = "";
+
+        // Optional Easing in X direction
+        this.easeX = "";
+
+        // Optional Easing in Y direction
+        this.easeY = "";
 
     };
 

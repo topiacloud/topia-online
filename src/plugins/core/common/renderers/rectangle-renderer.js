@@ -1,4 +1,4 @@
-﻿define(["data"], function(data) {
+﻿define(function() {
 
     return {
 

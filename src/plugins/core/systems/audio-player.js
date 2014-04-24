@@ -1,10 +1,14 @@
 ﻿define(["data"], function(data) {
 
-    data("sound").on("save", function(sound) {
+    data.sound.on("add", function(sound) {
         var fileType = sound.file.split(".")[1];
-        
-        $("body").append("<audio autoplay><source src='" + sound.file + "' type='audio/" + fileType + "'></source></audio>");
 
-        data("sound").remove(sound);
+        var audio = $("<audio autoplay><source src='" + sound.file + "' type='audio/" + fileType + "'></source></audio>");
+
+        $("body").append(audio);
+
+        audio.bind("ended", function() {
+            data.sound.remove(sound);
+        });
     });
 });

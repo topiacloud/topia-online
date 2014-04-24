@@ -15,17 +15,14 @@ define(["data"], function (data) {
         //The type of item this is. Examples might include sword, chair, stone, etc.
         this.type = "";
 
-        //The durability of an item. When this reaches 0, typically the item is destroyed. Default to 100?
-        this.health = 100;
-
-        //The sprite used by the item..
+        //The sprite used by the item. <---This will most likely be replaced by the component system.
         this.sprite = 0;
-
-        //The material an item is made of. This is an integer associated with the material table. 
-        this.material = 0;
 
         //The owner of an item. This will reference the actor to which the item belongs to.
         this.owner = null;
+
+        //Determines if this item is equipped by it's owner, or is simply in the owner's inventory.
+        this.isEquipped = false;
     };
 
     return data.define("topia", "item", Item);

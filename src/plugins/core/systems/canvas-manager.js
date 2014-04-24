@@ -9,7 +9,7 @@ define(["data"], function (data) {
         }
     };
 
-    data("canvas").on("save", function (canvas) {
+    data.canvas.on("add", function (canvas) {
 
         lastCanvasId = canvas.id;
 
@@ -24,7 +24,7 @@ define(["data"], function (data) {
         $("body").append(element);
 
         // Todo:  The canvas should be appended by an actual element management system
-        data("element").save({ tag: "canvas", selector: "#" + element.id, type: "canvas", target: canvas.id });
+        data.element.add({ tag: "canvas", selector: "#" + element.id, type: "canvas", target: canvas.id });
 
         canvas.setCanvas(element);
 
@@ -33,12 +33,17 @@ define(["data"], function (data) {
         }
 
         // Associate drawables
-        data("rectangle").each(initDrawable);
-        data("sprite").each(initDrawable);
-        data("text").each(initDrawable);
+        data.rectangle.each(initDrawable);
+        data.circle.each(initDrawable);
+        data.line.each(initDrawable);
+        data.sprite.each(initDrawable);
+        data.text.each(initDrawable);
     });
 
-    data("rectangle").on("save", initDrawable);
-    data("sprite").on("save", initDrawable);
-    data("text").on("save", initDrawable);
+    // Associate drawables with canvas
+    data.rectangle.on("add", initDrawable);
+    data.circle.on("add", initDrawable);
+    data.line.on("add", initDrawable);
+    data.sprite.on("add", initDrawable);
+    data.text.on("add", initDrawable);
 });

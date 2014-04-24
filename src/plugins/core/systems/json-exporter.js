@@ -2,6 +2,8 @@
 define(["data"], function (data) {
     
     data("operation").on("save", function (operation) {
+        return;
+
         if (operation.type == "export") {
             var json = {};
 

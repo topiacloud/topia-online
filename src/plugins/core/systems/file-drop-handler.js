@@ -3,6 +3,8 @@ define(["data"], function (data) {
 
     data("drop").on("save", function (drop) {
 
+        return;
+
         if (drop.type == "javascript") {
             eval(drop.data);
         }

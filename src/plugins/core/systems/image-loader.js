@@ -1,7 +1,6 @@
 ﻿// Handles loading images
 define(["data", "../common/loader"], function (data, Loader) {
 
-    var images = data("image");
     var loaders = {};
 
     var setCanvas = function(image) {
@@ -16,8 +15,8 @@ define(["data", "../common/loader"], function (data, Loader) {
     };
 
     var onLoad = function(url, canvas) {
-        var image = images.first({ url: url });
-        
+        var image = data.image.first({ url: url });
+
         if (image) {
             image.setCanvas(canvas);
             image.save();
@@ -39,16 +38,17 @@ define(["data", "../common/loader"], function (data, Loader) {
         to.save();
     };
 
-    images.on("remove", function(image) {
+    data.image.on("remove", function(image) {
         image.setCanvas(null);
     });
 
     // New image is created
-    images.on("save", function(image) {
+    data.image.on("add", function(image) {
+        
         if (!image.isLoaded) {
 
             if (image.copy) {
-                var copyImage = images.first(image.copy);
+                var copyImage = data.image.first(image.copy);
 
                 if (copyImage && copyImage.isLoaded) {
                     copy(copyImage, image);
@@ -76,7 +76,7 @@ define(["data", "../common/loader"], function (data, Loader) {
             }
         } else {
             // Any copies of this image?
-            images.each({ copy: image.id }, function(target) {
+            data.image.each({ copy: image.id }, function(target) {
                 copy(image, target);
             });
         }

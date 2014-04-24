@@ -1,6 +1,8 @@
 ﻿// A 2d grid system
 define(["data"], function (data) {
 
+    var selectedRect = 0;
+    var rectangles = data("rectangle");
     var grids = data("grid");
 
     // Event when you first add a grid
@@ -18,9 +20,11 @@ define(["data"], function (data) {
                 rect.width = grid.cellWidth;
                 rect.height = grid.cellHeight;
                 rect.group = group.id;
-                rect.color = grid.color;
+                //rect.color = grid.color;
                 rect.border = grid.color;
+
                 rect.save();
+                data("reaction").save({ type: "rectangle", target: rect.id, action: "touch" });
             }
         }
     });
@@ -33,5 +37,41 @@ define(["data"], function (data) {
 
         data("rectangle").remove(rects);
         data("group").remove(group);
+    });
+    
+    // Enable selection of rectangle
+    data("touch").on("save", function(touch) {
+        if (touch.type == "rectangle") {
+            var rect = rectangles.first({ id: touch.target });
+
+            if (rect && selectedRect != rect.id) {
+
+                // Tint the actor's sprite
+                rect.border = "white";
+                selectedRect = rect.id;
+            }
+        }
+    });
+
+    // Remove the tinted rectangle when mouse leaves
+    data("touch").on("remove", function(touch) {
+        if (touch.type == "rectangle") {
+
+            var rect = rectangles.first({ id: touch.target });
+
+            if (rect) {
+                var grid = data("grid").first({group: rect.group});
+
+                if (grid) {
+                    rect.border = grid.color;
+                } else {
+                    rect.border = rect.color;
+                }
+
+                if (selectedRect == rect.id) {
+                    selectedRect = 0;
+                }
+            }
+        }
     });
 });

@@ -1,7 +1,7 @@
 ﻿// Handles touch events on canvases
-define(["data"], function (data) {
+define(["data", "../common/throttle"], function (data, Throttle) {
 
-    var touches = data("touch");
+    var throttle = new Throttle(50);
 
     var processTouchEvent = function (element, e, state, button) {
 
@@ -9,7 +9,7 @@ define(["data"], function (data) {
         var y = e.pageY - $(e.target).offset().top - ($(e.target).height() / 2);
 
         var time = new Date().getTime();
-        var touch = touches.firstOrNew({ type: "canvas", target: element.target });
+        var touch = data.touch.firstOrNew({ type: "canvas", target: element.target });
 
         touch.type = "canvas";
         touch.target = element.target;
@@ -18,15 +18,19 @@ define(["data"], function (data) {
         touch.state = state;
         touch.time = time;
 
-        touches.save(touch);
+        data.touch.add(touch);
+        data.touch.commit();
     };
 
-    data("element").on("save", function(each) {
+    data.element.on("add", function(each) {
         if (each.tag == "canvas") {
+
             var element = $(each.selector);
 
             element.mousemove(function (e) {
-                processTouchEvent(each, e, "move");
+                throttle.action(function() {
+                    processTouchEvent(each, e, "move");
+                });
             });
 
             element.click(function (e) {
@@ -42,10 +46,10 @@ define(["data"], function (data) {
             });
 
             element.mouseleave(function (e) {
-                var touch = touches.first({ type: "canvas", target: each.target });
+                var touch = data.touch.first({ type: "canvas", target: each.target });
 
                 if (touch) {
-                    touches.remove(touch);
+                    data.touch.remove(touch);
                 }
             });
         }

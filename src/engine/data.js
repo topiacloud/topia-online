@@ -1,8 +1,9 @@
-﻿define(["engine/memory", "engine/events", "engine/store"], function (memory, events, Store) {
+﻿define(["engine/memory", "engine/container"], function (memory, Container) {
 
-    var stores = {};
+    var index = 0;
+    var store = {};
 
-    var getMemory = function () {
+    /*var getMemory = function () {
         var bytes = 0;
 
         _.each(stores, function (store) {
@@ -35,58 +36,77 @@
         }
 
         return status;
-    };
+    };*/
 
     var Data = function (containerName, key) {
-        if (!key) {
-            key = containerName;
-            containerName = "core";
+
+        if (key) {
+            if (!Data[containerName]) {
+                Data[containerName] = {};
+            }
+
+            if (!Data[containerName][key]) {
+                Data[containerName][key] = new Container(key, function() {}, Data);
+            }
+
+            return Data[containerName][key];
+        } else {
+            if (!Data[containerName]) {
+                Data[containerName] = new Container(key, function() {}, Data);
+            }
+
+            return Data[containerName];
         }
-
-        var container = stores[containerName];
-
-        if (!container) {
-            container = stores[containerName] = {};
-        }
-
-        if (!container[key]) {
-            container[key] = new Store(key, function() {});
-        }
-
-        return container[key];
     };
 
-    Data.stores = function() {
-        return stores;
-    };
-
-    Data.status = function () {
-        return getStatus();
-    };
-
-    Data.clear = function() {
-        _.each(stores, function(store) {
+    /*Data.clear = function() {
+        _.each(this, function(store) {
             store.clear();
         });
+    };*/
+
+    Data.get = function(id) {
+        return store[id];
     };
 
-    Data.define = function (container, key, type) {
+    Data.add = function(item) {
+
+        var added = false;
+
+        if (!item.hasOwnProperty("id")) {
+            item.id = (index += 1);
+            added = true;
+        }
+
+        store[item.id] = item;
+
+        return added;
+    };
+
+    Data.remove = function (id) {
+        delete store[id];
+    };
+
+    Data.define = function (namespace, key, type) {
+
+        var container = Data;
 
         if (!type) {
             type = key;
-            key = container;
-            container = "core";
+            key = namespace;
+        } else {
+            container = Data[namespace];
+        
+            if (!container) {
+                container = Data[namespace] = {};
+            }
         }
 
-        if (!stores.hasOwnProperty(container)) {
-            stores[container] = {};
-        }
-
-        if (!stores[container].hasOwnProperty(key)) {
-            return stores[container][key] = new Store(key, type);
+        if (!container.hasOwnProperty(key)) {
+            return container[key] = new Container(key, type, Data);
         }
         else {
-            return stores[container][key].setType(type);
+            return container[key].setType(type);
         }
     };
 

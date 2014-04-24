@@ -12,50 +12,39 @@ define(["data", "require"], function (data, require) {
         renderers.push({ type: "rectangle", renderer: renderer });
     });
 
+    require(["../common/renderers/circle-renderer"], function(renderer) {
+        renderers.push({ type: "circle", renderer: renderer });
+    });
+
+    require(["../common/renderers/line-renderer"], function(renderer) {
+        renderers.push({ type: "line", renderer: renderer });
+    });
+
     require(["../common/renderers/text-renderer"], function(renderer) {
         renderers.push({ type: "text", renderer: renderer });
     });
 
-    var canvases = data("canvas");
-    var cameras = data("camera");
-    var frames = data("frame");
+    data.frame.on("time", function () {
 
-    /*var drawObject = function(camera, x, y, canvas, collection) {
-        var toDraw = collection.get({ canvas: canvas.id });
-
-        toDraw = _.sortBy(toDraw, function (each) {
-            return each.index || 0;
-        });
-
-        var render = renders.firstOrNew();
-
-        _.each(toDraw, function (drawable) {
-            render.id = drawable.id;
-            render.type = collection.name;
-            render.canvas = canvas.id;
-            render.x = x;
-            render.y = y;
-            render.save();
-        });
-    };*/
-
-    frames.on("save", function () {
-
-        canvases.each(function(canvas) {
+        data.canvas.each(function(canvas) {
 
             var context = canvas.getContext();
 
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            var camera = cameras.first({ canvas: canvas.id });
+            var camera = data.camera.first({ canvas: canvas.id });
 
             if (camera) {
                 var x = parseInt(canvas.width / 2) - camera.x;
                 var y = parseInt(canvas.height / 2) - camera.y;
 
                 _.each(renderers, function(each) {
-                    data(each.type).each(function(drawable) {
-                        each.renderer.render(canvas, drawable, x, y);
+
+                    // Todo:  Handle sorting elsewhere
+                    var toDraw = _.sortBy(data[each.type].get(), function(item){ return item.index || 0; });
+
+                    _.each(toDraw, function(item) {
+                        each.renderer.render(canvas, item, x, y);
                     });
                 });
             }

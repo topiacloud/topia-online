@@ -1,5 +1,5 @@
 ﻿<script type="text/html">
-    <div class="topia window frame" data-bind="draggable: { iframeFix: true, opacity: 0.5, handle: '.window-draggable', containment: 'document', stack: '.topia.window' }, position: position">
+    <div class="topia window frame" data-bind="draggable: { iframeFix: true, opacity: 0.5, handle: '.window-draggable', containment: 'document', stack: '.topia.window' }, position: data.get(position)">
 
         <!-- Window Corners -->
         <div class="topCorner leftCorner corner window-draggable"></div>

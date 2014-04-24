@@ -6,13 +6,33 @@ define(["data"], function (data) {
     var frames = data("frame");
     var items = data("topia", "item");
 
-    frames.on("save", function () {
-        actors.each(function (actor) {
-            if (actor.sprite) {
-            var sprite = sprites.get(actor.sprite);
+    actors.on("save", function(actor) {
+        var sprite = sprites.get(actor.sprite);
 
+        if (sprite) {
             sprite.x = actor.x;
             sprite.y = actor.y;
+            sprite.save();
+        }
+    });
+
+    items.on("save", function(item) {
+        var sprite = sprites.get(item.sprite);
+
+        if (sprite) {
+            sprite.x = item.x;
+            sprite.y = item.y;
+            sprite.save();
+        }
+    });
+
+    /*frames.on("save", function () {
+        actors.each(function (actor) {
+            if (actor.sprite) {
+                var sprite = sprites.get(actor.sprite);
+
+                sprite.x = actor.x;
+                sprite.y = actor.y;
             };
         });
 
@@ -24,5 +44,5 @@ define(["data"], function (data) {
                 sprite.y = item.y;
             };
         });
-    });
+    });*/
 });

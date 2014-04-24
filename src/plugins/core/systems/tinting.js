@@ -1,9 +1,6 @@
 ﻿// Loads and initializes tint effect
 define(["data"], function (data) {
 
-    var tints = data("tint");
-    var images = data("image");
-
     var tintImage = function(tint, image) {
         var tempCanvas = document.createElement("canvas");
         tempCanvas.width = image.width;
@@ -22,9 +19,10 @@ define(["data"], function (data) {
         imageContext.drawImage(tempCanvas, 0, 0);
     };
 
-    images.on("save", function(image) {
+    // When an image is loaded, apply applicable tints to it
+    data.image.on("add", function(image) {
         if (image.isLoaded) {
-            var tint = tints.first({ image: image.id });
+            var tint = data.tint.first({ image: image.id });
 
             if (tint) {
                 tintImage(tint, image);
@@ -32,9 +30,10 @@ define(["data"], function (data) {
         }
     });
 
-    tints.on("save", function (tint) {
+    // When a tint is saved, apply it to target image
+    data.tint.on("add", function (tint) {
 
-        var image = images.get(tint.image);
+        var image = data.image.get(tint.image);
 
         if (image && image.isLoaded) {
             tintImage(tint, image);

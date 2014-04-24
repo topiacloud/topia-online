@@ -14,6 +14,9 @@ define(["data"], function (data) {
 
         //This property determines if the material will catch fire from normal flames.
         this.flammable = false;
+
+        //The weight of the material per size unit.
+        this.weight = 0
     };
 
     return data.define("topia", "material", Material);

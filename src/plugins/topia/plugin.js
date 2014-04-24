@@ -1,33 +1,44 @@
-﻿define([
-    "data",
+﻿define({
 
-    "./data/action",
-    "./data/actor",
-    "./data/death",
-    "./data/item",
-    "./data/material",
-    "./data/monument",
-    "./data/terrain",
+    name: "Topia Online",
 
-    "./systems/actor-input",
-    "./systems/terrain"
+    data: [
+        "action",
+        "actor",
+        "death",
+        "item",
+        "material",
+        "monument",
+        "terrain",
+        "trait",
+        "component"
+    ],
 
-], function(data) {
+    systems: [
+        "terrain",
+        "spriteglue",
+        "dataPopulation",
+        "select-actor",
+        "action"
+    ],
 
-    data("world").on("save", function() {
+    start: function(data) {
+        
+        data.world.on("add", function() {
 
-        // Create the canvas
-        var canvas = data("canvas").save({ maximized: true });
+            // Create the canvas
+            var canvas = data.canvas.add({ maximized: true });
 
-        // Create the camera
-        data("camera").save({ canvas: canvas.id, x: 0, y: 0 });
+            // Create the camera
+            data.camera.add({ canvas: canvas.id, x: 0, y: 0 });
 
-        // Create the terrain
-        data("topia", "terrain").save({ x: 0, y: 0, width: 4096, height: 4096, image: "content/assets/game/environment/grass.png" });
+            // Create the terrain
+            data.topia.terrain.add({ x: 0, y: 0, width: 4096, height: 4096, image: "content/assets/game/environment/grass.png" });
 
-        // Create the monument
-        var monumentSprite = data("sprite").save({ x: 0, y: 0, image: "content/assets/game/structures/monument.png" });
+            // Create the monument
+            var monumentSprite = data.sprite.add({ x: 0, y: 0, image: "content/assets/game/structures/monument.png" });
 
-        data("topia", "actor").save({ name: "Life Monument", x: 0, y: 0, sprite: monumentSprite.id });
-    });
+            data.topia.actor.add({ name: "Life Monument", x: 0, y: 0, sprite: monumentSprite.id });
+        });
+    }
 });

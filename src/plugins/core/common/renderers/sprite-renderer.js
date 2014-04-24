@@ -1,12 +1,10 @@
 ﻿define(["data"], function(data) {
 
-    var images = data("image");
-
     return {
 
         render: function(canvas, sprite, x, y) {
 
-            var image = images.get(sprite.image);
+            var image = data.image.get(sprite.image);
 
             if (image && image.isLoaded) {
 

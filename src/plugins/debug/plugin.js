@@ -1,4 +1,5 @@
-﻿define([
-    "./systems/fps",
-    "./systems/region-highlighter"
-]);
+﻿define({
+    systems: [
+        "fps"
+    ]
+});
