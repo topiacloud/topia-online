@@ -5,7 +5,7 @@ define(["data"], function (data) {
     var hitboxes = data("hitbox");
 
     // for now, let's check for collisions everytime a hitbox changes position
-    data.hitboxes.on(["add", "x", "y"], function (hitboxA) {
+    data.hitbox.on(["add", "x", "y"], function (hitboxA) {
 
         // check for any collisions
         hitboxes.each(function (hitboxB) {
