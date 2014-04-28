@@ -1,21 +1,23 @@
 ﻿// Converts canvas touch events into camera-relative touch events
 define(["data"], function (data) {
 
-    var touches = data("touch");
-
     // Create camera touch relative to canvas touches
-    data.touch.on(["add", "x", "y", "state"], function(touch) {
+    data.touch.on(["x", "y", "state"], function(touch) {
         if (touch.type == "canvas") {
-            var camera = data("camera").first({ canvas: touch.target });
+            var scene = data.scene.first({ canvas: touch.target });
 
-            if (camera) {
-                var cameraTouch = touches.firstOrAdd({ type: "camera", target: camera.id });
+            if (scene) {
+                var camera = data.camera.get(scene.camera);
 
-                cameraTouch.type = "camera";
-                cameraTouch.target = camera.id;
-                cameraTouch.x = camera.x + touch.x;
-                cameraTouch.y = camera.y + touch.y;
-                cameraTouch.state = touch.state;
+                if (camera) {
+                    var cameraTouch = data.touch.firstOrNew({ type: "camera", target: camera.id });
+
+                    cameraTouch.type = "camera";
+                    cameraTouch.target = camera.id;
+                    cameraTouch.x = camera.x + touch.x;
+                    cameraTouch.y = camera.y + touch.y;
+                    cameraTouch.state = touch.state;
+                }
             }
         }
     });
@@ -23,13 +25,13 @@ define(["data"], function (data) {
     // Remove camera 'touch' when 'canvas' touch is removed
     data.touch.on("remove", function(touch) {
         if (touch.type == "canvas") {
-            var camera = data("camera").first({ canvas: touch.target });
+            var scene = data.scene.first({ canvas: touch.target });
 
-            if (camera) {
-                var cameraTouch = touches.first({ type: "camera", target: camera.id });
+            if (scene) {
+                var cameraTouch = data.touch.first({ target: scene.camera });
 
                 if (cameraTouch) {
-                    touches.remove(cameraTouch);
+                    data.touch.remove(cameraTouch);
                 }
             }
         }

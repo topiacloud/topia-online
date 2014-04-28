@@ -3,11 +3,23 @@ define(["data"], function (data) {
 
     var Grid = function () {
 
+        // the currently selected cell within the grid
+        this.selected = null;
+
         // The x position offset relative to the grid's context (if applicable).
         this.x = 0;
 
         // The y position offset relative to the grid's context (if applicable).
         this.y = 0;
+
+        // Internal position variable X
+        this.prevX = null;
+
+        // Internal position variable Y
+        this.prevY = null;
+
+        // Internal color variable (?)
+        this.prevColor;
 
         // The total width in elements of the grid.
         this.width = 0;

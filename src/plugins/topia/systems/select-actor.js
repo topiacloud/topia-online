@@ -8,16 +8,16 @@ define(["data"], function (data) {
         var actor = actors.first({ sprite: sprite.id });
 
         if (actor) {
-            data("reaction").save({ type: "sprite", target: sprite.id, action: "touch" });
+            data.touchable.save({ type: "sprite", target: sprite.id });
         }
     });*/
 
     data.topia.actor.on("add", function(actor) {
-        data.reaction.add({ type: "sprite", target: actor.sprite, action: "touch" });
+        data.touchable.add({ type: "sprite", target: actor.sprite });
     });
 
     // Enable selection of actors
-    data.touch.on(["type"], function(touch) {
+    /*data.touch.on(["type"], function(touch) {
 
         if (touch.type == "sprite") {
             
@@ -35,7 +35,7 @@ define(["data"], function (data) {
                 selectedActor = actor.id;
             }
         }
-    });
+    });*/
 
     // If an actor is selected and their sprite changes, update them accordingly
     /*sprites.on("save", function(sprite) {
@@ -54,7 +54,7 @@ define(["data"], function (data) {
     });*/
 
     // Remove the tinted sprite when mouse leaves
-    data.touch.on("remove", function(touch) {
+    /*data.touch.on("remove", function(touch) {
 
         if (touch.type == "sprite") {
 
@@ -76,5 +76,5 @@ define(["data"], function (data) {
                 }
             }
         }
-    });
+    });*/
 });

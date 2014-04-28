@@ -1,0 +1,66 @@
+﻿<script type="text/html">
+    <style>
+        .topia-hotbar {
+            border-right: solid 1px gray;
+            width: 100%;
+        }
+
+        .topia-hotbar-button {
+            position: relative;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .topia-hotbar.horizontal .topia-hotbar-button {
+            float: left;
+        }
+
+        .topia-hotbar.horizontal .topia-hotbar-button.default {
+            border-left: solid 1px gray;
+        }
+
+        .topia-hotbar.vertical .topia-hotbar-button.default {
+            border-top: solid 1px gray;
+        }
+
+        .topia-hotbar-button.hover {
+            background: #c8c8c8;
+            background: rgba(200, 200, 200, 0.2);
+        }
+
+        .topia-hotbar-button .button-label {
+            color: white;
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            font-size: 12px;
+            font-family: arial;
+            font-weight: bold;
+        }
+        
+        .icon-container {
+            position: absolute;
+            left: 50%;
+            top: 15%;
+        }
+
+        .icon-container img {
+            position: relative;
+            left: -50%;
+        }
+    </style>
+    
+    <div data-bind="data: source">
+        <div data-bind="data: { plugin: 'hotkeys', type: 'button', get: { bar: id } }, css: orientation" class="topia-hotbar">
+            <div class="topia-hotbar-button" data-bind="style: { width: $parent.buttonWidth + 'px', height: $parent.buttonHeight + 'px' }, hoverable: {}, css: { first: index == 1, default: index != 1 }">
+                <div class="button-label" data-bind="visible: $parent.label, text: index"></div>
+
+                <div class="icon-container" data-bind="if: icon">
+                    <img data-bind="attr: { src: icon, width: ($parent.buttonWidth - 12) + 'px', height: ($parent.buttonHeight - 12) + 'px' }" />
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    
+</script>

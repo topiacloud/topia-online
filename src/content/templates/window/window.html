@@ -1,6 +1,7 @@
 ﻿<script type="text/html">
-    <div class="topia window frame" data-bind="draggable: { iframeFix: true, opacity: 0.5, handle: '.window-draggable', containment: 'document', stack: '.topia.window' }, position: data.get(position)">
-
+    <div class="topia window frame" data-bind="draggable: { opacity: 0.5, handle: '.window-draggable', containment: 'window', stack: '.topia.window' }, position: data.get(position)">
+        
+        <!-- ko if: frame -->
         <!-- Window Corners -->
         <div class="topCorner leftCorner corner window-draggable"></div>
         <div class="flip-vertical bottomCorner leftCorner corner window-draggable"></div>
@@ -12,6 +13,7 @@
         <div class="verticalEdge rightSide flip-horizontal window-draggable"></div>
         <div class="horizontalEdge topEdge window-draggable"></div>
         <div class="horizontalEdge bottomEdge flip-vertical window-draggable"></div>
+        <!-- /ko -->
 
         <!-- Window Header -->
         <!-- ko if: title -->
@@ -22,6 +24,7 @@
             <div style="clear: both;"></div>
         </div>
         <!-- /ko -->
+
         <!-- Window Body -->
         <div style="border: solid 1px black; z-index: 99; position: relative;">
 

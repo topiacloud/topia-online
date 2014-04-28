@@ -2,8 +2,7 @@
 
     return {
 
-        render: function(canvas, rectangle, x, y) {
-            var context = canvas.getContext();
+        render: function(canvas, context, rectangle, x, y) {
 
             x += rectangle.x;
             y += rectangle.y;

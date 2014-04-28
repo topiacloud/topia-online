@@ -1,4 +1,4 @@
-﻿define(["engine/observer"], function(Observer) {
+﻿define(["engine/node"], function(Node) {
 
     var containers = {};
     var globalChanges = {};
@@ -13,16 +13,73 @@
         }
     };
 
+    var Index = function(field) {
+        this.field = field;
+        this.map = {};
+    };
+
+    Index.prototype = {
+
+        remove: function(entity) {
+            var mapping = this.map[entity[this.field]];
+
+            if (mapping) {
+                mapping.splice(mapping.indexOf(entity), 1);
+            }
+        },
+
+        add: function(entity) {
+            var value = entity[this.field];
+
+            if (_.isUndefined(value)) {
+                return;
+            }
+
+            var index = this.map[value];
+
+            if (!index) {
+                index = this.map[value] = [];
+            }
+
+            index.push(entity);
+        },
+
+        update: function(entity, oldValue) {
+
+            var oldIndex = this.map[oldValue];
+
+            if (oldIndex) {
+                oldIndex.splice(oldIndex.indexOf(entity), 1);
+            }
+
+            this.add(entity);
+        },
+
+        get: function(value) {
+            if (!this.map[value]) {
+                this.map[value] = [];
+            }
+
+            return this.map[value];
+        },
+
+        each: function(value, callback) {
+            _.each(this.get(value), function(visual) {
+                callback(visual);
+            });
+        }
+    };
+
     var Container = function(name, type, registry) {
 
+        this.indexes = {};
         this.registry = registry;
         this.firstItem = null;
         this.lastItem = null;
         this.changeList = [];
         this.listeners = [];
         this.callbacks = { add: [], remove: [] };
-        this.store = {};
-        this.index = 0;
+        this.nodes = {};
         this.poolCapacity = 50;
         this.pool = [];
         this.name = name;
@@ -35,6 +92,18 @@
     };
 
     Container.prototype = {
+
+        index: function(field) {
+            if (!this.indexes[field]) {
+                var index = this.indexes[field] = new Index(field);
+
+                this.each(function(entity) {
+                    index.add(entity);
+                });
+            }
+
+            return this.indexes[field];
+        },
 
         iterate: function(callback) {
             if (!this.firstItem) {
@@ -108,64 +177,58 @@
         get: function(criteria) {
             var self = this;
 
-            if (arguments.length) {
-                if (_.isObject(criteria)) {
+            if (_.isObject(criteria)) {
+                var results = [];
 
-                    var results = [];
+                this.iterate(function(each) {
+                    if (self.match(each, criteria)) {
+                        results.push(each.value);
+                    }
 
-                    this.iterate(function(each) {
-                        if (self.match(each, criteria)) {
-                            results.push(each.value);
-                        }
+                    return true;
+                });
 
-                        return true;
-                    });
-
-                    return results;
-                }
-
-                var result = this.store[criteria];
-
-                return result != null ? result.value : null;
+                return results;
+            }
+            else if (_.isNumber(criteria)) {
+                return this.find(criteria);
             }
 
-            return _.map(_.toArray(this.store), function(each) { return each.value; } );
+            return _.map(_.toArray(this.nodes), function(each) { return each.value; } );
+        },
+
+        find: function(criteria) {
+            return this.nodes[criteria].value;
         },
 
         firstOrNew: function (criteria) {
-            return this.first(criteria) || this.create();
+            return this.first(criteria) || this.create(criteria);
         },
 
-        firstOrAdd: function (criteria) {
-            return this.first(criteria) || this.add(this.create());
+        create: function (criteria) {
+            return this.add(criteria);
         },
 
-        create: function() {
-            /*var item = this.pool.pop();
+        changed: function(item, existingChanges, field, oldValue, newValue) {
+            if (existingChanges == 0) {
+                globalChanges[this.name] = true;
+                this.changeList.push(item);
+            }
 
-            if (item) {
-                this.template.call(item);
-
-                return item;
-            }*/
-
-            return this.add(new this.type());
-        },
-
-        changed: function(item) {
-            globalChanges[this.name] = true;
-            this.changeList.push(item);
+            if (this.indexes.hasOwnProperty(field) && oldValue !== newValue) {
+                this.indexes[field].update(item.proxy, oldValue);
+            }
         },
 
         save: function(item) {
             
-            /*if (item.id && this.store[item.id]) {
-                this.changed(this.store[item.id].observer);
+            /*if (item.id && this.nodes[item.id]) {
+                this.changed(this.nodes[item.id].observer);
             }*/
 
             var added = this.add(item);
 
-            this.changed(this.store[item.id].observer);
+            this.changed(this.nodes[item.id].observer);
             this.commit();
 
             return added;
@@ -173,7 +236,7 @@
 
         add: function(item) {
 
-            if (this.registry.add(item)) {
+            if (this.registry.add(this, item)) {
                 
                 // Todo:  This is ugly and needs to change in the future
                 for (var defaultField in this.template) {
@@ -183,53 +246,64 @@
                 }
             }
 
-            if (!this.store.hasOwnProperty(item.id)) {
-                var observer = new Observer(item, this);
-                var entry = this.store[item.id] = { value: item, next: null, previous: this.lastItem, observer: observer };
+            if (!this.nodes.hasOwnProperty(item.id)) {
+                var node = this.nodes[item.id] = new Node(item, this);
+
+                for (var index in this.indexes) {
+                    this.indexes[index].add(item);
+                }
 
                 if (!this.firstItem) {
-                    this.firstItem = entry;
+                    this.firstItem = node;
                 }
 
                 if (this.lastItem) {
-                    this.lastItem.next = entry;
+                    this.lastItem.next = node;
                 }
 
-                this.lastItem = entry;
+                this.lastItem = node;
 
                 for (var field in this.callbacks) {
                     if (field == "save" || field == "add" || field == "remove") {
                         continue;
                     }
 
-                    observer.observe(field);
+                    node.observer.observe(field);
                 }
 
-                this.changeList.push(entry.observer);
+                this.changeList.push(node.observer);
                 this.commit();
             }
 
             return item;
         },
 
+        intercept: function(item, interceptor) {
+            this.nodes[item.id].observer.intercept(interceptor);
+        },
+
         remove: function(item) {
-            var store = this;
+            var container = this;
 
             if (_.isArray(item)) {
                 _.each(item, function(each) {
-                    store.remove(each);
+                    container.remove(each);
                 });
 
                 return;
             }
 
-            if (!item.id) {
-                item = this.store[item];
+            if (item.id) {
+                item = this.nodes[item.id];
             } else {
-                item = this.store[item.id];
+                item = this.nodes[item];
             }
 
             if (item) {
+
+                for (var index in this.indexes) {
+                    this.indexes[index].remove(item.value);
+                }
 
                 this.registry.remove(item.value.id);
 
@@ -239,7 +313,7 @@
                 this.changeList.push(item.observer);
                 this.commit();
 
-                delete this.store[item.value.id];
+                delete this.nodes[item.value.id];
 
                 // Todo:  Implement object pooling
                 /*delete item.observer;
@@ -276,44 +350,41 @@
         clear: function() {
             var container = this;
 
-            _.each(this.store, function(item) {
-                container.remove(item);
-            });
+            for (var each in this.nodes) {
+                container.remove(each);
+            }
         },
 
         each: function(criteria, callback) {
-            if (!this.firstItem) {
-                return;
-            }
 
             var node = this.firstItem;
 
-            if (callback && criteria) {
+            if (_.isFunction(criteria)) {
+
                 while (node != null) {
-                    var match = true;
-
-                    for (var field in criteria) {
-                        if (node.value[field] !== criteria[field]) {
-                            match = false;
-                            break;
-                        }
-                    }
-
-                    if (match) {
-                        callback(node.value);
-                    }
+                    criteria(node.value);
 
                     node = node.next;
                 }
+
+                return;
             }
-            else if (criteria && _.isFunction(criteria)) {
-                callback = criteria;
 
-                while (node != null) {
-                    callback(node.value);
+            while (node != null) {
+                var match = true;
 
-                    node = node.next;
+                for (var field in criteria) {
+                    if (node.value[field] !== criteria[field]) {
+                        match = false;
+                        break;
+                    }
                 }
+
+                if (match) {
+                    callback(node.value);
+                }
+
+                node = node.next;
             }
         },
 
@@ -338,14 +409,14 @@
 
                 if (field != "add" && field != "remove" && field != "save") {
                     this.each(function(item) {
-                        self.store[item.id].observer.observe(field);
+                        self.nodes[item.id].observer.observe(field);
                     });
                 }
             }
 
             this.callbacks[field].push(listener-1);
         },
-        
+
         commit: function() {
             if (this.changeList.length) {
 

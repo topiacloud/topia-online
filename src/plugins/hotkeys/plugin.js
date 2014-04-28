@@ -1,7 +1,8 @@
 ﻿define({
 
     data: [
-        "bar"
+        "bar",
+        "button"
     ],
 
     systems: [

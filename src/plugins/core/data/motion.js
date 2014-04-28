@@ -31,9 +31,6 @@ define(["data"], function (data) {
     
     var Motion = function () {
 
-        // Type of data that is performing the tween, must have 'x' and 'y' properties (could be a "rectangle", "camera", "sprite", etc)
-        this.type = "";
-
         // Id of the type of data table
         this.target = null;
 

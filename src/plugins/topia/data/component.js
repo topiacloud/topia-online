@@ -20,6 +20,9 @@ define(["data"], function (data) {
 
         //The weight of the component. Based on the size and material of the component.
         this.weight = 0;
+
+        //Is this component vital? When a vital component is destroyed, the item is destroyed.
+        this.isVital = false;
     };
 
     return data.define("topia", "component", Component);

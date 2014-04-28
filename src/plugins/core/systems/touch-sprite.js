@@ -24,7 +24,7 @@ define(["data", "../common/cache", "../common/image", "../common/pixel"], functi
 
                     // Check for opacity
                     if (color[3] > 0.2) {
-                        var spriteTouch = data.touch.firstOrAdd({ type: "sprite", target: sprite.id });
+                        var spriteTouch = data.touch.firstOrNew({ type: "sprite", target: sprite.id });
 
                         spriteTouch.type = "sprite";
                         spriteTouch.target = sprite.id;
@@ -50,9 +50,9 @@ define(["data", "../common/cache", "../common/image", "../common/pixel"], functi
     sprites.on("save", function(sprite) {
 
         // Does this sprite react to touch?
-        var reaction = data.reaction.first({ action: "touch", type: "sprite", target: sprite.id });
+        var touchable = data.touchable.first({ type: "sprite", target: sprite.id });
 
-        if (reaction) {
+        if (touchable) {
             
             var touch = touches.first({ type: "camera" });
 
@@ -73,9 +73,9 @@ define(["data", "../common/cache", "../common/image", "../common/pixel"], functi
             // Check existing sprites touched
             var touched = data.touch.get({ type: "sprite" });
 
-            data.reaction.each({ action: "touch", type: "sprite" }, function(reaction) {
+            data.touchable.each({ type: "sprite" }, function(touchable) {
 
-                var sprite = data.sprite.first(reaction.target);
+                var sprite = data.sprite.first(touchable.target);
 
                 if (sprite) {
                     testTouchSprite(touch, sprite, touched);

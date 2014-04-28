@@ -2,8 +2,7 @@
 
     return {
 
-        render: function(canvas, line, x, y) {
-            var context = canvas.getContext();
+        render: function(canvas, context, line, x, y) {
 
             context.beginPath();
             context.moveTo(x + line.x, y + line.y);

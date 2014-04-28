@@ -15,6 +15,10 @@ define(["data"], function (data) {
         // (Required) Url of image, or id of an image data reference
         this.image = "";
 
+        // (Optional) Direction of the image to be flipped
+        // Values: "horizontal", "vertical", "both"
+        this.flip = "";
+
         // (Internal) The total width of the sprite (from the graphic).
         this.width = 0;
 
@@ -29,6 +33,17 @@ define(["data"], function (data) {
 
         // The y offset of the 'center point' of the sprite, expressed as a float from 0 (top) to 1 (middle)
         this.anchorY = 1;
+
+        // (Internal) Cached transform matrix fields
+        this._scaled = false;
+        this._scaleX = 1;
+        this._scaleY = 1;
+        this._skewX = 0;
+        this._skewY = 0;
+        this._translateX = 0;
+        this._translateY = 0;
+        this._width = 0;
+        this._height = 0;
     };
 
     Sprite.prototype = {

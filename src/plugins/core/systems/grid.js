@@ -1,77 +1,109 @@
 ﻿// A 2d grid system
 define(["data"], function (data) {
 
-    var selectedRect = 0;
-    var rectangles = data("rectangle");
-    var grids = data("grid");
-
     // Event when you first add a grid
-    grids.on("add", function(grid) {
+    data.grid.on("add", function (grid) {
 
-        var group = data("group").save({name:"test"});
+        // there is no selected rectangle id
+        grid.selected = null;
+
+        // set the previous points to whatever the grid system currently is, so that delta checks will ping 0,0
+        grid.prevX = grid.x;
+        grid.prevY = grid.y;
+        grid.prevColor = grid.color;
+
+        // add a group for this grid system
+        var group = data.group.add({name:"test"});
         grid.group = group.id;
-        grid.save();
 
+        data.reaction.add({ type: "grid", target: grid.id, action: "touch" });
+
+        // create all the rectangles required for the grid system
         for (var x = 0; x < grid.width; x++) {
             for (var y = 0; y < grid.height; y++) {
-                var rect = data("rectangle").create();
-                rect.x = grid.x + (x * grid.cellWidth);
-                rect.y = grid.y + (y * grid.cellHeight);
-                rect.width = grid.cellWidth;
-                rect.height = grid.cellHeight;
-                rect.group = group.id;
-                //rect.color = grid.color;
-                rect.border = grid.color;
-
-                rect.save();
-                data("reaction").save({ type: "rectangle", target: rect.id, action: "touch" });
+                var rect = data.rectangle.add( {
+                    x: grid.x + (x * grid.cellWidth),
+                    y: grid.y + (y * grid.cellHeight),
+                    width: grid.cellWidth,
+                    height: grid.cellHeight,
+                    group: group.id,
+                    border: grid.color
+                });
             }
         }
+    });
+
+    // Event when the grid system's color changes
+    data.grid.on("color", function (grid) {
+        // get an array of the rectangles in the grid system's group
+        var rects = data.rectangle.get({group: grid.group});
+
+        // and adjust them accordingly
+        _.each(rects, function (rect) {
+            rect.border = grid.color;
+        });
+
+        grid.prevColor = grid.color;
+    });
+
+    // Event when the grid system's position has been changed
+    data.grid.on(["x", "y"], function (grid) {
+
+        // check to see if there has been any change in position to the grid system
+        var dx = grid.x - grid.prevX;
+        var dy = grid.y - grid.prevY;
+
+        // update the previous position values to what grid.x/grid.y is now
+        grid.prevX = grid.x;
+        grid.prevY = grid.y;
+
+        // so if there was any change in position..
+        if (dx != 0 || dy != 0) {
+
+            // get an array of the rectangles in the grid system's group
+            var rects = data.rectangle.get({group: grid.group});
+
+            // and adjust them accordingly
+            _.each(rects, function (rect) {
+                rect.x += dx; rect.y += dy;
+            });
+
+        }
+        
     });
 
     // Event when you remove a grid
-    grids.on("remove", function (grid) {
+    data.grid.on("remove", function (grid) {
 
-        var group = data("group").get(grid.group);
-        var rects = data("rectangle").get({ group: group.id });
+        var group = data.group.get(grid.group);
+        var rects = data.rectangle.get({group: grid.group});
+        data.rectangle.remove(rects);
+        data.group.remove(group);
 
-        data("rectangle").remove(rects);
-        data("group").remove(group);
     });
-    
-    // Enable selection of rectangle
-    data("touch").on("save", function(touch) {
-        if (touch.type == "rectangle") {
-            var rect = rectangles.first({ id: touch.target });
 
-            if (rect && selectedRect != rect.id) {
+    data.touch.on("add", function (touch) {
 
-                // Tint the actor's sprite
-                rect.border = "white";
-                selectedRect = rect.id;
-            }
+        if (touch.type == "grid") {
+            var grid = grid.first(touch.target);
+
+            var dx = touch.x - grid.x;
+            var dy = touch.y - grid.y;
+
+            grid.color = "white";
+        }
+
+    });
+
+    data.touch.on("remove", function (touch) {
+        if (touch.type == "grid") {
+            var grid = grid.first(touch.target);
+
+            var dx = touch.x - grid.x;
+            var dy = touch.y - grid.y;
+
+            grid.color = grid.prevColor;
         }
     });
 
-    // Remove the tinted rectangle when mouse leaves
-    data("touch").on("remove", function(touch) {
-        if (touch.type == "rectangle") {
-
-            var rect = rectangles.first({ id: touch.target });
-
-            if (rect) {
-                var grid = data("grid").first({group: rect.group});
-
-                if (grid) {
-                    rect.border = grid.color;
-                } else {
-                    rect.border = rect.color;
-                }
-
-                if (selectedRect == rect.id) {
-                    selectedRect = 0;
-                }
-            }
-        }
-    });
 });

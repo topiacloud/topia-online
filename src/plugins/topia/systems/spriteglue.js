@@ -1,48 +1,47 @@
 ﻿//This system makes sure sprites follow the actors around.
 define(["data"], function (data) {
 
-    var actors = data("topia", "actor");
-    var sprites = data("sprite");
-    var frames = data("frame");
-    var items = data("topia", "item");
+    //When an actor's sprite changes.
+    data.topia.actor.on("sprite", function(actor) {
+        //Get the sprite for that actor.
+        var sprite = data.sprite.get(actor.sprite);
 
-    actors.on("save", function(actor) {
-        var sprite = sprites.get(actor.sprite);
-
+        //Probably unneeded check. But set the sprite's x and y to the actor's x and y.
         if (sprite) {
             sprite.x = actor.x;
             sprite.y = actor.y;
-            sprite.save();
-        }
+        };
     });
 
-    items.on("save", function(item) {
-        var sprite = sprites.get(item.sprite);
+    //When an item's sprite changes.
+    data.topia.item.on("sprite", function(item) {
+        //Get the sprite for that item. 
+        var sprite = data.sprite.get(item.sprite);
 
+        //Set the sprite's x and y to the actor's x and y.
         if (sprite) {
             sprite.x = item.x;
             sprite.y = item.y;
-            sprite.save();
-        }
+        };
     });
 
-    /*frames.on("save", function () {
-        actors.each(function (actor) {
-            if (actor.sprite) {
-                var sprite = sprites.get(actor.sprite);
+    //When an actor's x and y changes.
+    data.topia.actor.on("x", "y", function(actor) {
+        //Get the sprite for the actor.
+        var sprite = data.sprite.get(actor.sprite);
 
-                sprite.x = actor.x;
-                sprite.y = actor.y;
-            };
-        });
+        //Set the sprite's x and y to the actor's x and y;
+        sprite.x = actor.x;
+        sprite.y = actor.y;
+    });
 
-        items.each(function (item) {
-            if (item.sprite && !item.owner) {
-                var sprite = sprites.get(item.sprite);
+    //When an item's x and y changes.
+    data.topia.item.on("x", "y", function(item) {
+        //Get the sprite for the actor.
+        var sprite = data.sprite.get(item.sprite);
 
-                sprite.x = item.x;
-                sprite.y = item.y;
-            };
-        });
-    });*/
+        //Set the sprite's x and y to the actor's x and y;
+        sprite.x = item.x;
+        sprite.y = item.y;
+    });
 });

@@ -15,9 +15,6 @@ define(["data"], function (data) {
         //The type of actor this is. Examples might include tree, human, wolf, etc.
         this.type = "";
 
-        //The health of an actor. When this reaches 0, typically the actor is dead. This is a placeholder unti BPP is implemented.
-        this.health = 100;
-
         //The sprite this actor uses, referenced by id.
         this.sprite = 0;
 

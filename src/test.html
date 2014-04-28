@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Topia Online</title>
+    
+    <link rel="stylesheet" type="text/css" href="content/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="content/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="content/site.css">
+    <link rel="stylesheet" type="text/css" href="content/ui.css">
+    <link rel="stylesheet" type="text/css" href="content/templates/window/window.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Belleza' rel='stylesheet' type='text/css'>
+    
+    <script src="lib/jquery/jquery-2.1.0.min.js"></script>
+    
+</head>
+    <body>
+        <img id="TestImage" src="content/assets/disorganized/grass.png" style="display: none;" />
+        <canvas id="MainCanvas" width="1024" height="768"></canvas>
+
+        <script>
+            $(function () {
+                var canvas = $("#MainCanvas")[0];
+                var context = canvas.getContext("2d");
+
+                var buffer = document.createElement("canvas");
+                var bufferContext = buffer.getContext("2d");
+
+                buffer.width = canvas.width;
+                buffer.height = canvas.height;
+
+                var cycles = 100000;
+
+                function DrawToCanvas() {
+                    var start = new Date();
+
+                    for (var count = 0; count < cycles; count++) {
+                        context.drawImage($("#TestImage")[0], 0, 0);
+                    }
+
+                    return new Date() - start;
+                }
+
+                function DrawToBuffer() {
+                    var start = new Date();
+
+                    for (var count = 0; count < cycles; count++) {
+                        bufferContext.drawImage($("#TestImage")[0], 0, 0);
+                    }
+
+                    context.drawImage(buffer, 0, 0);
+
+                    return new Date() - start;
+                }
+
+                function DrawCalc() {
+                    var start = new Date();
+
+                    for (var count = 0; count < cycles; count++) {
+                        if (count > (count + 1) && count < (count - 1) && count <= (count + 2) && count >= (count - 5)) {
+                        }
+                    }
+
+                    return new Date() - start;
+                }
+
+                function DrawOffCanvas() {
+                    var start = new Date();
+
+                    for (var count = 0; count < cycles; count++) {
+                        context.drawImage($("#TestImage")[0], -2000, 0);
+                    }
+
+                    return new Date() - start;
+                }
+
+                function DrawScaled() {
+                    var start = new Date();
+
+                    for (var count = 0; count < cycles; count++) {
+                        context.drawImage($("#TestImage")[0], 0, 0, 512, 512, 0, 0, 256, 256);
+                    }
+
+                    return new Date() - start;
+                }
+
+                setTimeout(function () {
+                    DrawToCanvas();
+
+                    setTimeout(function () {
+                        console.log("Draw normal image: " + DrawToCanvas());
+
+                        setTimeout(function () {
+                            console.log("Draw scaled image: " + DrawScaled());
+                        }, 500);
+                    }, 500);
+                }, 500);
+
+                /*setTimeout(function () {
+                    DrawToCanvas();
+
+                    setTimeout(function () {
+                        console.log("Calc canvas: " + DrawCalc());
+
+                        setTimeout(function () {
+                            console.log("To off canvas: " + DrawOffCanvas());
+                        }, 500);
+                    }, 500);
+                }, 500);*/
+
+                /*setTimeout(function () {
+                    DrawToCanvas();
+
+                    setTimeout(function () {
+                        console.log("To canvas: " + DrawToCanvas());
+
+                        setTimeout(function () {
+                            console.log("To buffer: " + DrawToBuffer());
+                        }, 500);
+                    }, 500);
+                }, 500);*/
+            });
+        </script>
+    </body>
+</html>

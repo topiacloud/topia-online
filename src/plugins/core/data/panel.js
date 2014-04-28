@@ -6,6 +6,9 @@ define(["data"], function (data) {
         // The text contained within the header of the panel.
         this.title = "";
 
+        // Whether the window frame borders should be displayed
+        this.frame = true;
+
         // The id of the 'source' of data that this panel represents
         this.source = 0;
 

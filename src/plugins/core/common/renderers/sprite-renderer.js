@@ -2,26 +2,32 @@
 
     return {
 
-        render: function(canvas, sprite, x, y) {
+        render: function(canvas, context, sprite) {
 
-            var image = data.image.get(sprite.image);
+            var image = data.image.find(sprite.image);
 
-            if (image && image.isLoaded) {
+            if (image.isLoaded) {
 
                 var imageCanvas = image.getCanvas();
-                var context = canvas.getContext();
 
-                var width = sprite.width || imageCanvas.width;
-                var height = sprite.height || imageCanvas.height;
-                var offset = sprite.getOffset();
+                //var width = sprite.width || imageCanvas.width;
+                //var height = sprite.height || imageCanvas.height;
 
-                x += offset[0];
-                y += offset[1];
+                //context.setTransform(sprite._scaleX, sprite._skewX, sprite._skewY, sprite._scaleY, 0, 0);
+
+                if (sprite._scaled) {
+                    context.save();
+                    context.transform(sprite._scaleX, sprite._skewX, sprite._skewY, sprite._scaleY, 0, 0);
+                }
 
                 if (sprite.isAtlas) {
-                    context.drawImage(imageCanvas, sprite.frameX, sprite.frameY, width, height, x, y, width, height);
+                    //context.drawImage(imageCanvas, sprite.frameX, sprite.frameY, width, height, sprite._translateX, sprite._translateY, width * scale, height * scale);
                 } else {
-                    context.drawImage(imageCanvas, x, y);
+                    context.drawImage(imageCanvas, 0, 0, sprite.width, sprite.height, sprite._translateX, sprite._translateY, sprite._width, sprite._height);
+                }
+
+                if (sprite._scaled) {
+                    context.restore();
                 }
             }
         }

@@ -1,7 +1,6 @@
 .topia.window {
     z-index: 999;
     position: absolute;
-    margin: -20px;
 }
 
 .topia.window.alwaysOnTop {

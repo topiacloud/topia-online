@@ -50,11 +50,11 @@
                                 start(data);
                             });
 
+                            data("world").add({ startTime: new Date().getTime() });
+
                             if (startup.start) {
                                 startup.start(data);
                             }
-
-                            data("world").add({ startTime: new Date().getTime() });
                         });
                     });
                 }

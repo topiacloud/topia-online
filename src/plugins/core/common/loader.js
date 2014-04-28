@@ -44,7 +44,7 @@ define(function() {
 
             var onError = function(e) {
                 unbindEvents();
-                throw "Failed to load image!";
+                throw "Failed to load image: " + url;
             };
 
             var onReadyStateChange = function() {

@@ -18,10 +18,13 @@ define(["data"], function (data) {
         this.position = 0;
 
         // The width in pixels of each button
-        this.buttonWidth = 64;
+        this.buttonWidth = 48;
 
         // The height in pixels of each button
-        this.buttonHeight = 64;
+        this.buttonHeight = 48;
+
+        // The image that should be displayed for each button
+        this.image = "";
     };
 
     return data.define("hotkeys", "bar", Bar);

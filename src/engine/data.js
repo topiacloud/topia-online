@@ -66,19 +66,23 @@
     };*/
 
     Data.get = function(id) {
-        return store[id];
+        return store[id][1];
     };
 
-    Data.add = function(item) {
+    Data.intercept = function(item, interceptor) {
+        store[item.id][0].intercept(item, interceptor);
+    },
+
+    Data.add = function(container, item) {
 
         var added = false;
 
         if (!item.hasOwnProperty("id")) {
             item.id = (index += 1);
             added = true;
-        }
 
-        store[item.id] = item;
+            store[item.id] = [container, item];
+        }
 
         return added;
     };

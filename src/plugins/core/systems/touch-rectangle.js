@@ -41,9 +41,9 @@ define(["data"], function (data, cache) {
     rectangles.on("save", function(rectangle) {
 
         // Does this rectangle react to touch?
-        var reaction = data("reaction").first({ action: "touch", type: "rectangle", target: rectangle.id });
+        var touchable = data.touchable.first({ type: "rectangle", target: rectangle.id });
 
-        if (reaction) {
+        if (touchable) {
             
             var touch = touches.first({ type: "camera" });
 
@@ -64,9 +64,9 @@ define(["data"], function (data, cache) {
             // Check existing rectangles touched
             var touched = touches.get({ type: "rectangle" });
 
-            data("reaction").each({ action: "touch", type: "rectangle" }, function(reaction) {
+            data.touchable.each({ type: "rectangle" }, function(touchable) {
 
-                var rectangle = data("rectangle").first(reaction.target);
+                var rectangle = data("rectangle").first(touchable.target);
 
                 if (rectangle) {
                     testTouchRectangle(touch, rectangle, touched);

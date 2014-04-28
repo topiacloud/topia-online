@@ -14,6 +14,9 @@ define(["data", "../common/cache", "../common/screen"], function (data, cache, s
 
         // The total height of the drawable surface of the canvas element.
         this.height = 0;
+
+        // The z-index of the canvas, useful for layering
+        this.index = 0;
     };
 
     Canvas.prototype = {

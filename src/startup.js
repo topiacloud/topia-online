@@ -19,9 +19,44 @@ switch( mode ) {
 
     case "test":
         define({
+
             plugins: [
                 "test"
-            ]
+            ],
+
+            start: function() {
+
+                var radius = 512;
+
+                var lamp = new illuminated.Lamp({
+                    position: new illuminated.Vec2(radius / 2, radius / 2),
+                    color: "rgba(255, 255, 255, 1)",
+                    distance: radius / 2,
+                    radius: 5,
+                    samples: 10000,
+                    diffuse: 1
+                });
+
+                var lighting = new illuminated.Lighting({
+                    light: lamp
+                });
+
+                var canvas = document.createElement("canvas");
+                canvas.width = radius;
+                canvas.height = radius;
+
+                $(canvas).appendTo("body");
+
+                var context = canvas.getContext("2d");
+
+                //context.fillStyle = "black";
+                //context.fillRect(0, 0, radius, radius);
+
+                lighting.compute(radius, radius);
+                lighting.render(context);
+
+                //$(canvas).css({ width: "512px", height: "512px" });
+            }
         });
 
         break;
@@ -63,19 +98,29 @@ switch( mode ) {
                     position: position.id
                 });
 
-                /*var hotbarPosition = data.position.add({
-                    my: "left+25 bottom-25",
-                    at: "left bottom",
-                    of: "#canvas1",
+                var hotbarPosition = data.position.add({
+                    my: "left bottom",
+                    at: "left+10 bottom-10",
                     collision: "fit"
                 });
 
                 data.hotkeys.bar.add({
-                    buttons: 5,
+                    buttons: 9,
                     orientation: "horizontal",
                     label: "numeric",
-                    position: hotbarPosition
-                });*/
+                    position: hotbarPosition.id
+                });
+
+                var button = data.hotkeys.button.first();
+                button.icon = "plugins/topia/content/images/icons/at-sea.png";
+
+                window.test = function() {
+                    var start = new Date();
+
+                    // Do stuff
+
+                    return new Date() - start;
+                };
             }
         });
 

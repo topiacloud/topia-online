@@ -57,8 +57,8 @@ define(["data", "../common/keyboard"], function (data, keyboard) {
             var camera = data.camera.first();
 
             if (camera) {
-                camera.x += parseInt(xVelocity * frame.delta);
-                camera.y += parseInt(yVelocity * frame.delta);
+                camera.x += xVelocity * frame.delta;
+                camera.y += yVelocity * frame.delta;
             }
         }
     });

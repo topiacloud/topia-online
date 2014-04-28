@@ -11,7 +11,7 @@ define(["data", "../common/loader"], function (data, Loader) {
         canvas.height = image.height || 1;
 
         image.setCanvas(canvas);
-        image.save();
+        //image.save();
     };
 
     var onLoad = function(url, canvas) {
@@ -19,7 +19,7 @@ define(["data", "../common/loader"], function (data, Loader) {
 
         if (image) {
             image.setCanvas(canvas);
-            image.save();
+            //image.save();
         }
     };
 
@@ -35,7 +35,7 @@ define(["data", "../common/loader"], function (data, Loader) {
         context.drawImage(from.getCanvas(), 0, 0);
 
         to.setCanvas(canvas);
-        to.save();
+        //to.save();
     };
 
     data.image.on("remove", function(image) {

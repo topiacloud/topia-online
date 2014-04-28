@@ -16,6 +16,8 @@ define(["data", "../common/cache", "../common/string"], function (data, cache, s
             header: panel.header || true,
             position: panel.position,
             source: panel.source || 0,
+            frame: panel.frame,
+            model: panel.model,
 
             close: function () {
                 $("#topia-ui-" + this.id).remove();
