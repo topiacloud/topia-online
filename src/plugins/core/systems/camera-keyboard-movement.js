@@ -6,6 +6,7 @@ define(["data", "../common/keyboard"], function (data, keyboard) {
     var yVelocity = 0;
 
     var option = data("option").add({ name: "wasd_camera", value: true });
+    var camera = null;
 
     data.keypress.on(["state", "add", "button"], function (key) {
 
@@ -53,13 +54,18 @@ define(["data", "../common/keyboard"], function (data, keyboard) {
             return;
         }
 
-        if (xVelocity != 0 || yVelocity != 0) {
-            var camera = data.camera.first();
-
-            if (camera) {
+        if (camera) {
+            if (xVelocity != 0) {
                 camera.x += xVelocity * frame.delta;
+            }
+
+            if (yVelocity != 0) {
                 camera.y += yVelocity * frame.delta;
             }
         }
+    });
+
+    data.camera.on("add", function(newCamera) {
+        camera = newCamera;
     });
 });

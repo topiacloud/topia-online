@@ -9,10 +9,6 @@ define(["data"], function (data) {
     $("body").append(element);
 
     setInterval(function() {
-        $(element).text("FPS: " + fps);
+        $(element).text("FPS: " + data.frame.first().fps);
     }, 1000);
-
-    data.tick.on("time", function(tick) {
-        fps = tick.fps;
-    });
 });

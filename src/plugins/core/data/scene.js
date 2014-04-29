@@ -6,7 +6,7 @@ define(["data"], function (data) {
         // (Required) The id of the camera meant to visualize the 'viewport' of the scene
         this.camera = 0;
 
-        // (Required) The id of the canvas that this scene should render to
+        // (Required) The id of the canvas that this scene renders to
         this.canvas = 0;
 
         // (Optional) The field name to use when sorting visual elements associated with this scene

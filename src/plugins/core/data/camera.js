@@ -3,10 +3,10 @@ define(["data"], function (data) {
 
     var Camera = function () {
 
-        // The x offset (in pixels) from the center of the camera.
+        // The world x offset (in pixels) from the center of the camera.
         this.x = 0;
 
-        // The y offset (in pixels) from the center of the camera.
+        // The world y offset (in pixels) from the center of the camera.
         this.y = 0;
 
         // The current zoom state of the camera
@@ -20,6 +20,19 @@ define(["data"], function (data) {
 
         // The amount of zoom to adjust each 'step'
         this.zoomStep = 0.125;
+
+        // (Internal) The full width/height of the camera, based on the associated canvas size
+        this.width = 0;
+        this.height = 0;
+
+        // (Internal) Canvas bounds, set internally based on context
+        // Example:  [left, top, right, bottom]
+        this.bounds = null;
+
+        //this._x = 0;
+        //this._y = 0;
+        //this._width = 0;
+        //this._height = 0;
     };
 
     Camera.prototype = {

@@ -78,13 +78,13 @@ switch( mode ) {
 
                 data.topia.actor.add({ x: -300, y: 200, name: "Tree", sprite: tree.id });
 
-                data.touch.on(["add", "state"], function(touch) {
+                /*data.touch.on(["add", "state"], function(touch) {
                     if (touch.type == "sprite" && touch.state == "click" && touch.target == tree.id) {
                         data.animation.add({ path: "content/assets/game/environment/tree/hit.json", sprite: touch.target, duration: 1200, repeat: false });
                     }
                 });
 
-                data.animation.add({ path: "content/assets/game/environment/tree/hit.json", sprite: tree.id, duration: 1200, repeat: true });
+                data.animation.add({ path: "content/assets/game/environment/tree/hit.json", sprite: tree.id, duration: 1200, repeat: true });*/
 
                 var position = data.position.add({
                     my: "right-25 top+25",

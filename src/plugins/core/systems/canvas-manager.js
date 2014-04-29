@@ -23,15 +23,5 @@ define(["data"], function (data) {
         if (canvas.maximized) {
             canvas.maximize();
         }
-
-    });
-
-    data.canvas.on(["width", "height"], function(canvas) {
-
-    });
-
-    // Todo:  remove the canvas from the DOM
-    data.canvas.on("remove", function(canvas) {
-
     });
 });

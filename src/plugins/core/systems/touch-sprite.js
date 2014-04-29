@@ -1,6 +1,8 @@
 ﻿// Handles touch events on sprites
 define(["data", "../common/cache", "../common/image", "../common/pixel"], function (data, cache, Image, pixel) {
 
+    return;
+
     var touches = data("touch");
     var sprites = data("sprite");
 

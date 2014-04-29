@@ -40,9 +40,6 @@ define(["data", "require"], function (data, require) {
             var context = canvas.getContext();
             context.clearRect(0, 0, canvas.width, canvas.height);
 
-            var x = Math.round(canvas.width / 2) - camera.x;
-            var y = Math.round(canvas.height / 2) - camera.y;
-
             /*if (scene.sortBy) {
                 visuals = _.sortBy(visuals, function(each) { return each[scene.sortBy] || 0; });
             } else {
@@ -50,7 +47,7 @@ define(["data", "require"], function (data, require) {
             }*/
 
             visuals.each(scene.id, function(visual) {
-                renderers[visual.type].render(canvas, context, data.get(visual.target), x, y, camera.zoom);
+                renderers[visual.type].render(canvas, context, data.get(visual.target), camera);
             });
         });
     });

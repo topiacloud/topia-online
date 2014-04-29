@@ -2,10 +2,12 @@
 
     return {
 
-        render: function(canvas, context, rectangle, x, y) {
+        render: function(canvas, context, rectangle, camera) {
 
-            x += rectangle.x;
-            y += rectangle.y;
+            var x = Math.round(rectangle.x * camera.zoom - camera.bounds[0]);
+            var y = Math.round(rectangle.y * camera.zoom - camera.bounds[1]);
+            var width = Math.round(rectangle.width * camera.zoom);
+            var height = Math.round(rectangle.height * camera.zoom);
 
             // Todo:  Some performance may be lost with setting fillStyle & strokeStyle like this
             if (rectangle.color) {
@@ -13,7 +15,7 @@
                     context.fillStyle = rectangle.color;
                 }
 
-                context.fillRect(x, y, rectangle.width, rectangle.height);
+                context.fillRect(x, y, width, height);
             }
 
             if (rectangle.border) {
@@ -21,7 +23,7 @@
                     context.strokeStyle = rectangle.border;
                 }
 
-                context.strokeRect(x, y, rectangle.width, rectangle.height);
+                context.strokeRect(x, y, width, height);
             }
         }
     };

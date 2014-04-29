@@ -57,10 +57,14 @@
 
         get: function(value) {
             if (!this.map[value]) {
-                this.map[value] = [];
+                return [];
             }
 
             return this.map[value];
+        },
+
+        first: function(value) {
+            return _.first(this.get(value));
         },
 
         each: function(value, callback) {
@@ -85,6 +89,7 @@
         this.name = name;
         this.template = null;
         this.type = null;
+        this.total = 0;
 
         this.setType(type);
 
@@ -248,6 +253,8 @@
 
             if (!this.nodes.hasOwnProperty(item.id)) {
                 var node = this.nodes[item.id] = new Node(item, this);
+
+                this.total += 1;
 
                 for (var index in this.indexes) {
                     this.indexes[index].add(item);
