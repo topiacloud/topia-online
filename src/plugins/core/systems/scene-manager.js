@@ -4,50 +4,43 @@ define(["data", "require"], function (data, require) {
     // Todo:  Cache sorted visuals
 
     var renderers = {};
-
-    require(["../common/renderers/sprite-renderer"], function(renderer) {
-        renderers.sprite = renderer;
-    });
-
-    require(["../common/renderers/rectangle-renderer"], function(renderer) {
-        renderers.rectangle = renderer;
-    });
-
-    require(["../common/renderers/circle-renderer"], function(renderer) {
-        renderers.circle = renderer;
-    });
-
-    require(["../common/renderers/line-renderer"], function(renderer) {
-        renderers.line = renderer;
-    });
-
-    require(["../common/renderers/text-renderer"], function(renderer) {
-        renderers.text = renderer;
-    });
-
-    require(["../common/renderers/fill-renderer"], function(renderer) {
-        renderers.fill = renderer;
-    });
-
     var visuals = data.visual.index("scene");
 
-    // Render scenes each frame
-    data.frame.on("time", function () {
-        data.scene.each(function(scene) {
-            var camera = data.camera.find(scene.camera);
-            var canvas = data.canvas.find(scene.canvas);
+    require([
+        "../common/renderers/sprite-renderer",
+        "../common/renderers/rectangle-renderer",
+        "../common/renderers/circle-renderer",
+        "../common/renderers/line-renderer",
+        "../common/renderers/text-renderer",
+        "../common/renderers/fill-renderer"
+    ],
+    function(sprites, rectangles, circles, lines, texts, fills) {
 
-            var context = canvas.getContext();
-            context.clearRect(0, 0, canvas.width, canvas.height);
+        renderers.sprite = sprites;
+        renderers.rectangle = rectangles;
+        renderers.circle = circles;
+        renderers.line = lines;
+        renderers.text = texts;
+        renderers.fill = fills;
 
-            /*if (scene.sortBy) {
-                visuals = _.sortBy(visuals, function(each) { return each[scene.sortBy] || 0; });
-            } else {
-                visuals = _.sortBy(visuals, function(each) { return each.index || 0; });
-            }*/
+        // Render scenes each frame
+        data.frame.on("time", function () {
+            data.scene.each(function(scene) {
+                var camera = data.camera.find(scene.camera);
+                var canvas = data.canvas.find(scene.canvas);
 
-            visuals.each(scene.id, function(visual) {
-                renderers[visual.type].render(canvas, context, data.get(visual.target), camera);
+                var context = canvas.getContext();
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                /*if (scene.sortBy) {
+                    visuals = _.sortBy(visuals, function(each) { return each[scene.sortBy] || 0; });
+                } else {
+                    visuals = _.sortBy(visuals, function(each) { return each.index || 0; });
+                }*/
+
+                visuals.each(scene.id, function(visual) {
+                    renderers[visual.type].render(canvas, context, data.get(visual.target), camera);
+                });
             });
         });
     });
